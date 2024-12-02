@@ -1,4 +1,4 @@
-package scripts
+package missionChief
 
 import (
 	"bufio"
@@ -8,6 +8,7 @@ import (
 	"strings"
 )
 
+// This takes input 2 columns.
 func ReadIODay1(path string) ([]int, []int, error) {
 	file, err := os.Open(path)
 	if err != nil {
@@ -35,4 +36,32 @@ func ReadIODay1(path string) ([]int, []int, error) {
 
 	}
 	return input1, input2, nil
+}
+
+// This reads 2D array with no. of columns not fixed. 
+func ReadIODay2(path string) ([][]int, error) {
+	file, err := os.Open(path)
+	if err != nil {
+		panic(err)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
+	reports := make([][]int, 0)
+
+	for scanner.Scan() {
+		line := scanner.Text()
+		fields := strings.Fields(line)
+		levels := make([]int, len(fields))
+		for i, field := range fields {
+			f, err := strconv.Atoi(field)
+			if err != nil {
+				err = fmt.Errorf("not able to convert string to int: %v: %v", f, err)
+				return nil, err
+			}
+			levels[i] = f
+		}
+		reports = append(reports, levels)
+	}
+
+	return reports, nil
 }
